@@ -43,7 +43,7 @@ public/
 jspm_packages/
 config/default.json
 config/test.json
-firebase/
+
 
 
 # Snowpack dependency directory (https://snowpack.dev/)
