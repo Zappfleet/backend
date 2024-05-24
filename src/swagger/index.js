@@ -38,7 +38,7 @@ function swaggerSetup() {
                 {
                     //sgh
                     //url: "http://0.0.0.0",
-                    url: "https://zapp-backend.liara.run:4000",
+                    url: "https://zapp-backend.liara.run",
                    // url: "http://localhost:4000",
                 },
                 {
