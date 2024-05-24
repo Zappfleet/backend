@@ -7,8 +7,8 @@ const OrgDataSource = {
 
 
   //sgh
-  userDetailsUrl: "https://zapp-backend.liara.run:4000/api/v2/irisa/employee-detils",
-  userSearchUrl: "https://zapp-backend.liara.run:4000/api/v2/irisa/employee-search",
+  userDetailsUrl: "https://zapp-backend.liara.run/api/v2/irisa/employee-detils",
+  userSearchUrl: "https://zapp-backend.liara.run/api/v2/irisa/employee-search",
   
 
   displayNameField: "details.full_name",

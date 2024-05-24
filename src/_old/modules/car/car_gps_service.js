@@ -28,7 +28,7 @@ function initGpsService() {
             //sgh
             //await axios.put(`http://localhost:${process.env.PORT}/car/me/location/25f4g6g4u8fkylhfjdgfPdjfbv2d54fd4`, body)
 
-            await axios.put(`https://zapp-backend.liara.run:${process.env.PORT}/car/me/location/25f4g6g4u8fkylhfjdgfPdjfbv2d54fd4`, body)
+            await axios.put(`https://zapp-backend.liara.run/car/me/location/25f4g6g4u8fkylhfjdgfPdjfbv2d54fd4`, body)
 
             const currentTrip = await Trip.findOne({
                 "driver.driver_id": car.driver.driver_id,
@@ -43,7 +43,7 @@ function initGpsService() {
             //sgh
           //  await axios.put(`http://localhost:${process.env.PORT}/trip/me/${currentTrip._id.toString()}/distance/skjhsdhuw5s74disudkdnn25ej`, body)
 
-            await axios.put(`https://zapp-backend.liara.run:${process.env.PORT}/trip/me/${currentTrip._id.toString()}/distance/skjhsdhuw5s74disudkdnn25ej`, body)
+            await axios.put(`https://zapp-backend.liara.run/trip/me/${currentTrip._id.toString()}/distance/skjhsdhuw5s74disudkdnn25ej`, body)
 
         } catch (e) {
             console.log(e);
