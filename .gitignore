@@ -41,8 +41,7 @@ build/Release
 node_modules/
 public/
 jspm_packages/
-config/default.json
-config/test.json
+
 
 
 
