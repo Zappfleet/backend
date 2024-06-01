@@ -37,12 +37,11 @@ function swaggerSetup() {
             servers: [
                 {
                     //sgh
-                    //url: "http://0.0.0.0",
-                    url: "https://zapp-backend.liara.run",
-                   // url: "http://localhost:4000",
+                    url: config.get("environment_name") === "local" ?
+                        "http://localhost:4000" : config.get("environment_name") === "server" ?
+                            "https://zapp-backend.liara.run" : "",
                 },
                 {
-                   // url: "https://zapp-backend.liara.run:4000",
                     url: "http://testpanel.zappfleet.ir",
                 },
             ],

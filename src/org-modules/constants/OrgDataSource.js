@@ -1,15 +1,24 @@
 const OrgSecretFields = ["accessToken", "userDetailsUrl", "userSearchUrl"];
+const config = require("config")
+
+// Define URLs for different environments
+let userDetailsUrl, userSearchUrl;
+const environmentName = config.get("environment_name");
+
+if (environmentName === "local") {
+  userDetailsUrl = "http://localhost:4000/api/v2/irisa/employee-detils";
+  userSearchUrl = "http://localhost:4000/api/v2/irisa/employee-search";
+} else if (environmentName === "server") {
+  userDetailsUrl = "https://zapp-backend.liara.run/api/v2/irisa/employee-detils";
+  userSearchUrl = "https://zapp-backend.liara.run/api/v2/irisa/employee-search";
+}
 
 const OrgDataSource = {
   accessToken: "veryspecialaccesstoken",
-  //userDetailsUrl: "http://localhost:4000/api/v2/irisa/employee-detils",
-  //userSearchUrl: "http://localhost:4000/api/v2/irisa/employee-search",
-
 
   //sgh
-  userDetailsUrl: "https://zapp-backend.liara.run/api/v2/irisa/employee-detils",
-  userSearchUrl: "https://zapp-backend.liara.run/api/v2/irisa/employee-search",
-  
+  userDetailsUrl: userDetailsUrl,
+  userSearchUrl: userSearchUrl,
 
   displayNameField: "details.full_name",
 

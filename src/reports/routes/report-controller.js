@@ -115,14 +115,23 @@ class ReportController {
 
 
     ///////////////////////////////
+    var fromDate = new Date(fromdate);
+    var toDate = new Date(todate);
+
+    // Set the time part of the "from" date to the start of the day (00:00:00)
+    fromDate.setHours(0, 0, 0, 0);
+
+    // Set the time part of the "to" date to the end of the day (23:59:59)
+    toDate.setHours(23, 59, 59, 999);
+
     const aggregationPipeline = [
       {
         $match: {
           status: status,
           // Uncomment and adjust these lines if you want to filter by date range
           "extra.mission_start": {
-            $gte: new Date(fromdate),
-            $lte: new Date(todate)
+            $gte: fromDate,
+            $lte: toDate
           }
         }
       },
@@ -161,7 +170,7 @@ class ReportController {
 
   ////////////Report DriverList_By_LastServiceAdnDistanse
   async get_DriverList_By_LastServiceAdnDistanse(req, res) {
-console.log(1456);
+   // console.log(1456);
     const { status } = req.query;
 
     // Step 1: Find the role ID for "راننده"
@@ -205,7 +214,7 @@ console.log(1456);
           "mission_duration": "$extra.mission_duration",
           "mission_duration_formatted": "$extra.mission_duration_formatted",
           "driver_full_name": "$driver.full_name",
-          "distance": "محاسبه نشده"
+          "distance": "$extra.distance"
         }
       },
       {
@@ -217,7 +226,7 @@ console.log(1456);
 
     // console.log(4455,UserAccount);
     const result = await ServiceMission.aggregate(aggregationPipeline);
-   // console.log(523, result);
+    // console.log(523, result);
     return res.status(200).send({
       status: 200,
       data: result
@@ -231,14 +240,23 @@ console.log(1456);
     //console.log(3332);
     const { status, fromdate, todate } = req.query;
 
+    ///////////////////////////////
+    var fromDate = new Date(fromdate);
+    var toDate = new Date(todate);
+
+    // Set the time part of the "from" date to the start of the day (00:00:00)
+    fromDate.setHours(0, 0, 0, 0);
+
+    // Set the time part of the "to" date to the end of the day (23:59:59)
+    toDate.setHours(23, 59, 59, 999);
     const aggregationPipeline = [
       {
         $match: {
           status: status,
           // Uncomment and adjust these lines if you want to filter by date range
           "extra.mission_start": {
-            $gte: new Date(fromdate),
-            $lte: new Date(todate)
+            $gte: fromDate,
+            $lte: toDate
           }
         }
       },
@@ -310,7 +328,7 @@ console.log(1456);
       for (let i = 0; i < driverRecords.length; i++) {
 
         let entry;
-        if (i === 0) {
+        if (driverRecords.length === 1) {
           entry = {
             driver_id: driverRecords[i].driver_id,
             mission_start: driverRecords[i].mission_start,
@@ -327,7 +345,7 @@ console.log(1456);
 
           let duration;
           if (currentStartDate !== previousEndDate) {
-            duration = "آخرین سرویس";
+            duration = "اولین سرویس";
           } else {
             const timeDifference = currentMissionStart - previousMissionEnd;
             duration = msToTime(timeDifference);
@@ -364,13 +382,23 @@ console.log(1456);
   async get_CountOfServicesByStartAndEndDate(req, res) {
     const { status, fromdate, todate } = req.query;
 
+    ///////////////////////////////
+    var fromDate = new Date(fromdate);
+    var toDate = new Date(todate);
+
+    // Set the time part of the "from" date to the start of the day (00:00:00)
+    fromDate.setHours(0, 0, 0, 0);
+
+    // Set the time part of the "to" date to the end of the day (23:59:59)
+    toDate.setHours(23, 59, 59, 999);
+
     const aggregationPipeline = [
       {
         $match: {
           status: status,
           "extra.mission_start": {
-            $gte: new Date(fromdate),
-            $lte: new Date(todate)
+            $gte: fromDate,
+            $lte: toDate
           }
         }
       },

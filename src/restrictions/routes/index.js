@@ -1,8 +1,8 @@
 const { checkForPermissionsMiddleware } = require("../../middlewarePublic/checkForPermissionsMiddleware");
 const { PermissionSet } = require("../../../src/users/data/constants/permissions");
-const inactivesystemController = require("./restrictions.controller");
-const express = require("express");
 const restrictionsController = require("./restrictions.controller");
+const express = require("express");
+
 
 
 const router = express.Router();
@@ -11,7 +11,7 @@ const router = express.Router();
  * @swagger
  * /api/v2/restrict/insert_InactiveSystem:
  *   post:
- *     tags: [inactivesystemController]
+ *     tags: [restrict]
  *     summary: Insert Inactive System
  *     responses:
  *       200:
@@ -21,13 +21,83 @@ const router = express.Router();
  *       500:
  *         description: Internal Error
  */
-router.post("/insert_InactiveSystem", inactivesystemController.insert_InactiveSystem);
+router.post("/insert_InactiveSystem", restrictionsController.insert_InactiveSystem);
+
+/**
+ * @swagger
+ * /api/v2/restrict/insertRestrictionShowRequests:
+ *   post:
+ *     tags: [restrict]
+ *     summary: insertRestrictionShowRequests
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal Error
+ */
+router.post("/insertRestrictionShowRequests", restrictionsController.insertRestrictionShowRequests);
+
+
+
+/**
+ * @swagger
+ * /api/v2/restrict/selectRestrictionShowRequests:
+ *   get:
+ *     tags: [restrict]
+ *     summary: selectRestrictionShowRequests
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal Error
+ */
+router.get("/selectRestrictionShowRequests", restrictionsController.selectRestrictionShowRequests);
+
+
+
+/**
+ * @swagger
+ * /api/v2/restrict/insertSetWorkingWeek:
+ *   post:
+ *     tags: [restrict]
+ *     summary: insertSetWorkingWeek
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal Error
+ */
+router.post("/insertSetWorkingWeek", restrictionsController.insertSetWorkingWeek);
+
+
+
+/**
+ * @swagger
+ * /api/v2/restrict/selectSetWorkingWeek:
+ *   get:
+ *     tags: [restrict]
+ *     summary: selectSetWorkingWeek
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal Error
+ */
+router.get("/selectSetWorkingWeek", restrictionsController.selectSetWorkingWeek);
 
 /**
  * @swagger
  * /api/v2/restrict/select_InactiveSystem:
  *   get:
- *     tags: [inactivesystemController]
+ *     tags: [restrict]
  *     summary: Insert Inactive System
  *     responses:
  *       200:
@@ -37,14 +107,14 @@ router.post("/insert_InactiveSystem", inactivesystemController.insert_InactiveSy
  *       500:
  *         description: Internal Error
  */
-router.get("/select_InactiveSystem", inactivesystemController.select_InactiveSystem);
+router.get("/select_InactiveSystem", restrictionsController.select_InactiveSystem);
 
 
 /**
  * @swagger
  * /api/v2/restrict/delete_InactiveSystem/{id}:
  *  delete:
- *      tags: [inactivesystemController]
+ *      tags: [restrict]
  *      summary: disable a specific region
  *      security:
  *              - BearerAuth: []
@@ -60,7 +130,7 @@ router.get("/select_InactiveSystem", inactivesystemController.select_InactiveSys
  *          500:
  *              description: Internal Error
  */
-router.delete("/delete_InactiveSystem/:id", inactivesystemController.delete_InactiveSystem);
+router.delete("/delete_InactiveSystem/:id", restrictionsController.delete_InactiveSystem);
 
 
 
@@ -68,7 +138,7 @@ router.delete("/delete_InactiveSystem/:id", inactivesystemController.delete_Inac
  * @swagger
  * /api/v2/restrict/update_InactiveSystem/{id}:
  *  put:
- *      tags: [inactivesystemController]
+ *      tags: [restrict]
  *      summary: inactivesystemController_update
  *      security:
  *              - BearerAuth: []
@@ -100,6 +170,6 @@ router.delete("/delete_InactiveSystem/:id", inactivesystemController.delete_Inac
  *          500:
  *              description: Internal Error
  */
-router.put("/update_InactiveSystem/:id", inactivesystemController.update_InactiveSystem);
+router.put("/update_InactiveSystem/:id", restrictionsController.update_InactiveSystem);
 
-module.exports = { inactivesystemRouter: router };
+module.exports = { restrictionsRouter: router };

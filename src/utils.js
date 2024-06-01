@@ -177,6 +177,18 @@ function replaceArabicCharacters(text) {
   return text;
 }
 
+function setStartOfDay(date) {
+  // Set the time part of the "from" date to the start of the day (00:00:00)
+  return date.setHours(0, 0, 0, 0);
+}
+
+function setEndOfDay(date) {
+  // Set the time part of the "to" date to the end of the day (23:59:59)
+ return date.setHours(23, 59, 59, 999);
+}
+
+
+
 module.exports = {
   plugin,
   getDatabase,
@@ -197,4 +209,6 @@ module.exports = {
   getMongoosePaginateOptions,
   replaceArabicCharacters,
   Database,
+  setStartOfDay,
+  setEndOfDay
 };

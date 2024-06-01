@@ -69,6 +69,31 @@ router.get("/passenger", missionController.getMissionsConcerningPassenger);
 
 /**
  * @swagger
+ * /api/v2/services/missions/getMissions_by_StatusAndDriverID:
+ *  get:
+ *      tags: [Service Mission]
+ *      summary: get list of missions containing a passengers request
+ *      security:
+ *              - BearerAuth: []
+ *      parameters:
+ *        - in : query
+ *          name : status
+ *          type : string
+ *        - in : query
+ *          name : driverID
+ *          type : string
+ *      responses:
+ *          200:
+ *              description: Success
+ *          401:
+ *              description: Unauthraize
+ *          500:
+ *              description: Internal Error
+ */
+router.get("/getMissions_by_StatusAndDriverID", missionController.getMissions_by_StatusAndDriverID);
+
+/**
+ * @swagger
  * /api/v2/services/missions/driver/:
  *  get:
  *      tags: [Service Mission]

@@ -26,6 +26,7 @@ const { UserAccount } = require("../../users/data/models/user-model");
 const Region = require("../../regions/data/region-model");
 const { OrgDataSource } = require("../../org-modules/constants/OrgDataSource");
 const { getListOfUsers } = require("../../users/data/user");
+const { calculateRequestDistance } = require("../../_old/utils/DistanceHelper");
 
 const MISSION_NOT_FOUND = { error: "Specified mission not found", status: 404 };
 const REQUEST_NOT_FOUND = { error: "Service Request Not Found", status: 404 };
@@ -180,6 +181,11 @@ async function appendRequestToMission(mission_id, request_id, assigner_id) {
     return { error: "Request already assigned", status: 405 };
   }
 
+  //sgh distance
+  // Adding or updating the distance property in mission.extra
+  mission.extra.distance = request.details.distance.distance;
+
+
   const otherServiceRequests = await mission.getDetailedServiceRequests();
   const existingDates = otherServiceRequests.map((item) => item.gmt_for_date);
   existingDates.push(new Date(request.gmt_for_date));
@@ -200,15 +206,20 @@ async function appendRequestToMission(mission_id, request_id, assigner_id) {
     }
   }
 
+
   mission.service_requests.push({
     request_id: request._id,
   });
 
   const missionResult = await ServiceMission.findOneAndUpdate(
-    mission._id,
-    { $push: { service_requests: { request_id: request._id } } },
+    { _id: mission._id },
+    {
+      $push: { service_requests: { request_id: request._id } },
+      $set: { extra: mission.extra } // Use $set to update the extra field
+    },
     { new: true }
   );
+
 
   const old_status = request.status;
   const new_status = serviceRequestStatus.ASSIGNED_TO_MISSION.key;
@@ -626,18 +637,54 @@ async function createServiceRequest(
       status,
       confirmed_by,
     };
+
+    //sgh calculate distance 
+
+    // console.log("Number of locations:", locations.length);
+    let Total_distance = 0
+    await Promise.all(
+      locations.map(async (location, index) => {
+        if (index < locations.length - 1) {
+          let newlocation = {};
+          let distance;
+
+          newlocation = {
+            start: {
+              lnglat: [location.coordinates[1], location.coordinates[0]]
+            },
+            finish: {
+              lnglat: [locations[index + 1].coordinates[1], locations[index + 1].coordinates[0]]
+            }
+          };
+
+          distance = await calculateRequestDistance(newlocation);
+          Total_distance += distance ? distance.distance : 0;
+        }
+      })
+    )
+
+    doc.details.distance = Total_distance
+
+    ///////////////////////////////////////////////
+
+
+
     const regions = await locateRequestAreas(doc);
     doc.area = regions[0];
-
+    // console.log(1);
     if (OrgDataSource.requestProcessorModule) {
+      //  console.log(2);
       const processor = require(`../modules/${OrgDataSource.requestProcessorModule}`);
+      // console.log(3, doc);
       const processResult = await processor(doc);
+      // console.log(4);
       if (processResult?.error) {
         return { error: processResult.error, status: 422 };
       }
     }
 
     const newRequest = await ServiceRequest.create(doc);
+    // console.log(4444, newRequest);
     return newRequest;
   } catch (e) {
     const dbError = e.error?.errors?.extra?.properties?.message;
@@ -899,9 +946,8 @@ async function vehicleMissionCompatiblityCheck(mission, vehicle) {
       vehicleServices[i].capacity
     ) {
       return {
-        error: `not enough capacity : ${
-          requestedServiceRequiredCapacity[vehicleServices[i].service]
-        }`,
+        error: `not enough capacity : ${requestedServiceRequiredCapacity[vehicleServices[i].service]
+          }`,
       };
     }
   }

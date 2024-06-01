@@ -57,6 +57,8 @@ const sendEmptyResults = (res) => res.status(200).send({ docs: [] });
 
 class MissionController {
   async buildFullMission(req, res) {
+
+
     const { data: requestsList, extra, vehicle_id } = req.body;
 
     const hiddenMission = await createHiddenMission(req.auth._id, extra);
@@ -72,11 +74,12 @@ class MissionController {
             return await getUserById(submitted_for._id);
           }
         })();
-
+        console.log(4007);
         const details = {
           direct_request: false,
           indirectly_submitted_by: req.auth._id,
         };
+        console.log(4008, gmt_for_date, 'problem in get date');
         const results = await Promise.all(
           gmt_for_date.map(async (date) => {
             return await createServiceRequest(
@@ -90,10 +93,11 @@ class MissionController {
             );
           })
         );
+        console.log(4009);
         return results;
       })
     );
-
+    console.log(9000);
     async function deleteAll() {
       await fullDeleteMission(
         hiddenMission._id,
@@ -142,7 +146,7 @@ class MissionController {
         : serviceMissionStatus.READY.key
     );
   }
-
+  /////////////
   async getDriverMissions(req, res) {
     const isPermittedForDriving = await checkForPermissions(req.auth, [
       PermissionSet.DRIVER,
@@ -166,6 +170,26 @@ class MissionController {
       req.query.sort,
       parseInt(req.query.page || 0)
     );
+    res.status(200).send(missionList);
+  }
+
+  async getMissions_by_StatusAndDriverID(req, res) {
+    const { status, driverID } = req.query;
+    let missionsFilter = {}
+    if (driverID === undefined) {
+      missionsFilter = {
+        // driver_id: new ObjectId(user_id),
+        status: status,
+      };
+    }
+    else {
+      missionsFilter = {
+        driver_id: new ObjectId(driverID),
+        status: status,
+      };
+    }
+
+    const missionList = await ServiceMission.find(missionsFilter);
     res.status(200).send(missionList);
   }
 
@@ -472,5 +496,7 @@ async function updateMissionRequestStatus(
     notifyMissionUpdate(result, mission_id);
   }
 }
+
+
 
 module.exports = new MissionController();

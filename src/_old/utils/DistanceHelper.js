@@ -31,7 +31,7 @@ const calculateTripDistance = async (pointArr) => {
     try {
       const { data } = await axios.get(
         config.get("NESHAN_DISATNCE_URL") +
-          `&origins=${firstEl[1]},${firstEl[0]}&destinations=${secondEl[1]},${secondEl[0]}`,
+        `&origins=${firstEl[1]},${firstEl[0]}&destinations=${secondEl[1]},${secondEl[0]}`,
         { headers: { "Api-Key": config.get("NESHAN_API_KEY") } }
       );
       distance += data.rows[0].elements[0].distance.value;
@@ -58,15 +58,28 @@ const calculateRequestDistance = async (locations) => {
   const { lnglat: slg } = start;
   const { lnglat: flg } = finish;
   try {
+    // const { start, finish } = locations;
+    // const slg = start.lnglat; // slg is now an array [lng, lat]
+    // const flg = finish.lnglat; // flg is now an array [lng, lat]
+
+    // // Log the coordinates to verify their correctness
+    // console.log("Start Coordinates:", slg[1], slg[0]);
+    // console.log("Finish Coordinates:", flg[1], flg[0]);
+
     const { data } = await axios.get(
       config.get("NESHAN_DISATNCE_URL") +
-        `&origins=${slg[1]},${slg[0]}&destinations=${flg[1]},${flg[0]}`,
+      `&origins=${slg[1]},${slg[0]}&destinations=${flg[1]},${flg[0]}`,
       { headers: { "Api-Key": config.get("NESHAN_API_KEY") } }
     );
+    //   console.log(53, data.rows[0]);
     distance += data.rows[0].elements[0].distance.value;
     interval += data.rows[0].elements[0].duration.value;
   } catch (error) {
-    console.log(error);
+    console.error("Error while fetching distance:", error.message);
+    if (error.response) {
+      console.error("Status:", error.response.status);
+      console.error("Response Data:", error.response.data);
+    }
   }
   return { distance, interval };
 };

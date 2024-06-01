@@ -6,11 +6,17 @@ const logger = require("../middleware/logger");
 exports.db = function (callback) {
 
   //sgh
-  const db = config.get("db");
-  const db_server = config.get("db_SERVER");
+  let db = ""
+  let environment_name = config.get("environment_name")
+  if (environment_name === "local") {
+    db = config.get("db");
+  }
+  if (environment_name === "server") {
+    db = config.get("db_SERVER");
+  }
   mongoose.set('strictQuery', false);
   mongoose
-    .connect(db_server, {
+    .connect(db, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })

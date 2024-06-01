@@ -16,7 +16,7 @@ const { authenticate, restrict } = require("./users/mid/auth");
 const { userRolesRouter } = require("./users/routes/roles");
 const { OrgDataSource } = require("./org-modules/constants/OrgDataSource");
 const { reportsRouter } = require("./reports/routes/");
-const { inactivesystemRouter } = require("./restrictions/routes/");
+const { restrictionsRouter } = require("./restrictions/routes/");
 
 const init = async () => {
   const app = express();
@@ -35,7 +35,7 @@ const init = async () => {
   router.use("/roles", authenticate, restrict, userRolesRouter);
   router.use("/users", userAccountRouter);
   router.use("/reports", authenticate, reportsRouter);
-  router.use("/restrict", authenticate, inactivesystemRouter);
+  router.use("/restrict", authenticate, restrictionsRouter);
 
   router.use("/irisa", irisaRouter);
 

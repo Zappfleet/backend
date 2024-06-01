@@ -12,8 +12,7 @@ const restrictionSchema = new mongoose.Schema(
       required: true,
     },
     value: {
-      type: String,
-      required: true
+      type: mongoose.Schema.Types.Mixed,
     }
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }

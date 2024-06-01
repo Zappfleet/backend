@@ -1,5 +1,6 @@
 const PermissionSet = {
     ONLYADMIN: null,
+    RESTRICTION:null,
     DRIVER: null,
     SERVICE: {
         PERSONAL: {

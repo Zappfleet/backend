@@ -1,4 +1,5 @@
 {
+  "environment_name":"server",
   "jwtPrivateKey": "ZAPP_JWT_PRIVATE_KEY",
   "IRISA_BASE_URL": "IRISA_BASE_URL",
   "IRISA_USERNAME": "IRISA_USERNAME",

@@ -37,8 +37,10 @@ class RequestController {
     }
 
     const submitted_by = req.auth._id;
+
     const results = await Promise.all(
       gmt_for_date.map(async (date) => {
+       // console.log(521, date, submitted_by, locations, service, details);
         return await createServiceRequest(
           submitted_by,
           locations,
@@ -48,6 +50,7 @@ class RequestController {
         );
       })
     );
+  //  console.log(99, results);
     if (
       results.some((item) => {
         if (item.error != null) {
@@ -75,10 +78,23 @@ class RequestController {
   }
 
   async updateRequest(req, res) {
-    const { locations, service, gmt_for_date, details } = req.body;
+    const { locations, service, gmt_for_date, details, type, submitted_by } = req.body;
     const _id = req.params.id;
 
     const existingMission = await getRequestServiceMissionIfExists(_id);
+
+    //sgh
+    // checkPermissions
+    const isPermittedFor = type === 'update' ? true : await checkForPermissions(req.auth, [
+      PermissionSet.SERVICE.DIRECT_EDIT,
+    ]);
+
+    const isCreatorOfRequest = type === 'update' ? req.auth._id === submitted_by.id ? true : false : true
+    //console.log(400,isPermittedFor,isCreatorOfRequest);
+    if (isPermittedFor === false || isCreatorOfRequest === false) {
+      return res.status(403).send({ error: "Not Allowed" });
+    }
+
 
     const ignoreStatus =
       existingMission?.status == serviceMissionStatus.DRAFT.key;
