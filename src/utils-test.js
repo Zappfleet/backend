@@ -52,6 +52,7 @@ const ConnectDatabase = async function (post_fix) {
     return await mongoose.connect(testDb, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 30000 ,
     })
 };
 

@@ -15,10 +15,20 @@ let irisaToken;
 async function run() {
 
     console.log("----- Zapp Initialization ----- ");
-    const db = config.get("db");
+
+    let db = ""
+    let environment_name = config.get("environment_name")
+    if (environment_name === "local") {
+      db = config.get("db");
+    }
+    if (environment_name === "server") {
+      db = config.get("db_SERVER");
+    }
+   
     console.log("Connecting to database");
 
-    await mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true, });
+    mongoose.set('strictQuery', false);
+    await mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 30000 });
     console.log("Connection stablished successfully");
 
 

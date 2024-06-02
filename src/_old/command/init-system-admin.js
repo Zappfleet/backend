@@ -7,8 +7,17 @@ const config = require("config");
 
 async function run() {
 
-    const db = config.get("db");
-    await mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true, });
+    let db = ""
+    let environment_name = config.get("environment_name")
+    if (environment_name === "local") {
+      db = config.get("db");
+    }
+    if (environment_name === "server") {
+      db = config.get("db_SERVER");
+    }
+
+    mongoose.set('strictQuery', false);
+    await mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true,serverSelectionTimeoutMS: 30000  });
 
     const user = await User.create({
         full_name: "مدیر سیستم",
