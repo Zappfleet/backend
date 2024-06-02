@@ -28,7 +28,7 @@ async function run() {
     console.log("Connecting to database");
 
     mongoose.set('strictQuery', false);
-    await mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true, authSource: admin, serverSelectionTimeoutMS: 30000 });
+    await mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true, authSource: "admin", serverSelectionTimeoutMS: 30000 });
     console.log("Connection stablished successfully");
 
 

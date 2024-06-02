@@ -20,7 +20,7 @@ exports.db = function (callback) {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: 30000,
-      authSource: admin
+      authSource: "admin"
     })
     .then(() => {
       logger.info(`connected to database`);
