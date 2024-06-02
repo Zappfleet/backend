@@ -3,6 +3,11 @@ const {
   notifyServiceRequestUpdate,
   notifyNewServiceRequest,
 } = require("../../notification-service/emits");
+
+const {
+  notifyAPIDeleteApproveRequest,
+  notifyAPIChangeTimeOfTripByDispature
+} = require("../../notification-service/notif-API");
 const {
   filterObject,
   datesAreInSameDay,
@@ -24,6 +29,7 @@ const {
 const { checkForPermissions } = require("../../users/data/user");
 const { getRegionsAssignedToUser } = require("../../regions/data");
 const { PermissionSet } = require("../../users/data/constants/permissions");
+const { sendMyIrisaNotification } = require("../../_old/utils/irisaHelper");
 
 class RequestController {
   async submitRequest(req, res) {
@@ -40,7 +46,7 @@ class RequestController {
 
     const results = await Promise.all(
       gmt_for_date.map(async (date) => {
-       // console.log(521, date, submitted_by, locations, service, details);
+        // console.log(521, date, submitted_by, locations, service, details);
         return await createServiceRequest(
           submitted_by,
           locations,
@@ -50,7 +56,7 @@ class RequestController {
         );
       })
     );
-  //  console.log(99, results);
+    //  console.log(99, results);
     if (
       results.some((item) => {
         if (item.error != null) {
@@ -140,6 +146,14 @@ class RequestController {
     } else {
       res.status(200).send(result);
       notifyServiceRequestUpdate(_id);
+
+      //sgh تغییر ساعت توسط دیسپاچر
+      if (existingMission != null && gmt_for_date != null) {
+        if (isCreatorOfRequest === false) {
+          await notifyAPIChangeTimeOfTripByDispature(_id)
+        }
+      }
+
     }
   }
 
@@ -228,6 +242,10 @@ async function statusChange(req, res, status) {
   } else {
     res.status(200).send(result);
     notifyServiceRequestUpdate(_id);
+    console.log(22, status);
+    if (status === 'CONFIRM' || status === 'REJECT') {
+      notifyAPIDeleteApproveRequest(_id, status)
+    }
   }
 }
 

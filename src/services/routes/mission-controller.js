@@ -52,6 +52,7 @@ const {
 const { PermissionSet } = require("../../users/data/constants/permissions");
 const { getRegionsAssignedToUser } = require("../../regions/data");
 const { default: mongoose } = require("mongoose");
+const { notifyAPIStartTripByDriver, notifyAPIArriveToSource } = require("../../notification-service/notif-API");
 
 const sendEmptyResults = (res) => res.status(200).send({ docs: [] });
 
@@ -302,9 +303,10 @@ class MissionController {
   async setMissionOnRoute(req, res) {
     const { mission_id } = req.params;
 
+    const mission = await ServiceMission.findById(mission_id);
     const restriction = await Restriction.findOne({ key: 5 });
     if (restriction?.value != null) {
-      const mission = await ServiceMission.findById(mission_id);
+
       const missionTime = moment(mission.gmt_for_date);
       const restrictionMoment = missionTime
         .clone()
@@ -327,6 +329,10 @@ class MissionController {
       mission_id,
       serviceMissionStatus.ON_ROUTE.key
     );
+
+    //sgh شروع سفر توسظ راننده
+    await notifyAPIStartTripByDriver(mission.service_requests[0].request_id)
+
   }
 
   async setMissionReady(req, res) {
@@ -494,6 +500,14 @@ async function updateMissionRequestStatus(
   } else {
     res.status(200).send(result);
     notifyMissionUpdate(result, mission_id);
+
+    //sgh  حرکت به سمت مبدا
+    if (status === assignedRequestStatus.ON_ROUTE.key) {
+      const mission = await ServiceMission.findById(mission_id);
+      // console.log(5566, mission.service_requests[0].request_id);
+      await notifyAPIArriveToSource(mission.service_requests[0].request_id)
+    }
+
   }
 }
 

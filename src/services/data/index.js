@@ -27,6 +27,7 @@ const Region = require("../../regions/data/region-model");
 const { OrgDataSource } = require("../../org-modules/constants/OrgDataSource");
 const { getListOfUsers } = require("../../users/data/user");
 const { calculateRequestDistance } = require("../../_old/utils/DistanceHelper");
+const { notifyAPIArriveToDestination } = require("../../notification-service/notif-API");
 
 const MISSION_NOT_FOUND = { error: "Specified mission not found", status: 404 };
 const REQUEST_NOT_FOUND = { error: "Service Request Not Found", status: 404 };
@@ -499,6 +500,11 @@ async function setMissionRequestStatus(
     };
   }
   await mission.save();
+
+  //sgh سفر به پایان رسید
+  if ((status_to = serviceMissionStatus.DONE.key)) {
+    await notifyAPIArriveToDestination(mission.service_requests[0].request_id)
+  }
 
   return { mission, history_entry };
 }
