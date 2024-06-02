@@ -17,7 +17,7 @@ async function run() {
     }
 
     mongoose.set('strictQuery', false);
-    await mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true,serverSelectionTimeoutMS: 30000  });
+    await mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true,serverSelectionTimeoutMS: 30000 ,authSource:admin });
 
     const user = await User.create({
         full_name: "مدیر سیستم",

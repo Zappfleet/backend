@@ -19,7 +19,8 @@ exports.db = function (callback) {
     .connect(db, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 30000 
+      serverSelectionTimeoutMS: 30000,
+      authSource: admin
     })
     .then(() => {
       logger.info(`connected to database`);
