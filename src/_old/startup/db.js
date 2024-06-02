@@ -1,32 +1,48 @@
-import { set, connect } from "mongoose";
-import { get } from "config";
-import { info } from "../middleware/logger";
+const mongoose = require("mongoose");
+const config = require("config");
+const logger = require("../middleware/logger");
 
 
-export function db (callback) {
+exports.db = function async(callback) {
 
   //sgh
   let db = ""
-  let environment_name = get("environment_name")
+  let environment_name = config.get("environment_name")
   if (environment_name === "local") {
-    db = get("db");
+    db = config.get("db");
   }
   if (environment_name === "server") {
-    db = get("db_SERVER");
+    db = config.get("db_SERVER");
+    console.log(3, db);
   }
-  set('strictQuery', false);
-  connect(db, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 30000,
-      authSource: "admin"
-    })
-    .then(() => {
-      info(`connected to database`);
-      if (callback != null) {
-        callback();
-      }
-    });
 
 
-}
+  try {
+    mongoose.set('strictQuery', false);
+    await mongoose
+      .connect(db, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 30000,
+        authSource: "admin"
+      })
+      .then(() => {
+        logger.info(`connected to database`);
+        if (callback != null) {
+          callback();
+        }
+      });
+    console.log('Successfully connected to MongoDB');
+  } catch (error) {
+    if (error instanceof mongoose.Error.MongooseServerSelectionError) {
+      console.error(100, 'MongooseServerSelectionError:', error.message);
+    } else {
+      console.error(200, 'Unexpected Error:', error);
+    }
+    process.exit(1); // Exit process with failure code
+  }
+
+
+
+
+};
