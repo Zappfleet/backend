@@ -148,8 +148,9 @@ async function triggerForgetPassword(req, res) {
 }
 
 async function userSignIn(req, res) {
+  console.log(44);
   const { username, password } = req.body;
-  console.log(44,username,password);
+ 
   const user = await getUserByCredentials(username.toLowerCase(), password);
   if (user == null) {
     return res.status(404).send({ error: "wrong user credentials" });

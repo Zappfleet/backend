@@ -169,12 +169,31 @@ async function getUserById(_id) {
 }
 
 async function getUserByCredentials(username, password) {
-  const user = await UserAccount.findOne({
-    username,
-    password: encrypt(password),
-    status: userStatus.ACTIVE.key,
-  });
-  return user;
+
+  try {
+    const user = await UserAccount.findOne({
+      username,
+      password: encrypt(password),
+      status: userStatus.ACTIVE.key,
+    });
+
+    return user;
+  } catch (error) {
+    if (error instanceof mongoose.Error) {
+      console.error('MongooseError:', error.message);
+      // Handle the specific Mongoose error here if needed
+    } else {
+      console.error('Unexpected Error:', error);
+    }
+    // Return an appropriate response or rethrow the error
+    throw error; // or return null / appropriate response
+  }
+  // const user = await UserAccount.findOne({
+  //   username,
+  //   password: encrypt(password),
+  //   status: userStatus.ACTIVE.key,
+  // });
+  // return user;
 }
 
 async function resetUserPasswordWithSecretCode(username, code, new_password) {
