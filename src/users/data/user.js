@@ -1,3 +1,4 @@
+const mongoose = require('mongoose'); // Ensure mongoose is imported
 const identifyUserRoles = require("./modules/identifyUserRoles");
 const { UserAccount } = require("./models/user-model");
 const { userStatus } = require("./constants/userStatus");
@@ -169,7 +170,6 @@ async function getUserById(_id) {
 }
 
 async function getUserByCredentials(username, password) {
-
   try {
     const user = await UserAccount.findOne({
       username,
